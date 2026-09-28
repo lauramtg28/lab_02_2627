@@ -107,13 +107,24 @@ get_penguin_names(penguins2)
 ```
 
 ```{r}
+# task one from part 1b
 summarise_vector <- function(vector){
   list( mean = mean(vector), minimum = min(vector),maximum = max(vector), n = length(vector))
 }
 example <-summarise_vector(c(210, 217, 230, 205))
 print(example$mean)
 ```
+```{r}
+# Task 2 from part 1b
 
+str(example)
+summarise_vector <- function(vector){
+  
+  list( mean = mean(vector), minimum = min(vector),maximum = max(vector), n = length(vector))
+}
+#modifythis <- summarise_vector(c(223, 245, NA, 123, 543, 773, NA ,851))
+
+```
 ## Part 2: Advanced Array Indexing
 
 In the lecture we saw that we can use *logical indexing* into arrays, i.e.
