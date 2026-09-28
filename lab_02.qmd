@@ -77,7 +77,7 @@ mean1(c(1,2,3,4,5,6,7,8,9,10))
 
 Recall that a *list* can hold a mixture of types, and that lists turn up all over `R` — in particular, they are how a function returns several results at once, and how we store a collection of records.
 
-- [ ] A function can only return a single object, so when we want to return several results we bundle them into a list. Write a function `summarise_vector(x)` that returns a **named list** with the `mean`, `min`, `max`, and `n` (length) of a numeric vector `x`. Call it on `c(210, 217, 230, 205)` and use `$` to print just the mean from the result.
+- [x] A function can only return a single object, so when we want to return several results we bundle them into a list. Write a function `summarise_vector(x)` that returns a **named list** with the `mean`, `min`, `max`, and `n` (length) of a numeric vector `x`. Call it on `c(210, 217, 230, 205)` and use `$` to print just the mean from the result.
 - [ ] Call `str()` on the value your function returns to confirm its structure, then modify `summarise_vector` so that missing values are ignored (test it on a vector containing `NA`).
 - [ ] Below is a list of penguins, each itself a list. Using a `for` loop (or `sapply`), extract the `species` of every penguin into a character vector, and compute the mean flipper length across all of them.
 
@@ -106,6 +106,13 @@ get_penguin_names(penguins)
 get_penguin_names(penguins2)
 ```
 
+```{r}
+summarise_vector <- function(vector){
+  list( mean = mean(vector), minimum = min(vector),maximum = max(vector), n = length(vector))
+}
+example <-summarise_vector(c(210, 217, 230, 205))
+print(example$mean)
+```
 
 ## Part 2: Advanced Array Indexing
 
