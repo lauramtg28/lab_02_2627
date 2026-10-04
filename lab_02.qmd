@@ -79,7 +79,7 @@ Recall that a *list* can hold a mixture of types, and that lists turn up all ove
 
 - [x] A function can only return a single object, so when we want to return several results we bundle them into a list. Write a function `summarise_vector(x)` that returns a **named list** with the `mean`, `min`, `max`, and `n` (length) of a numeric vector `x`. Call it on `c(210, 217, 230, 205)` and use `$` to print just the mean from the result.
 - [x] Call `str()` on the value your function returns to confirm its structure, then modify `summarise_vector` so that missing values are ignored (test it on a vector containing `NA`).
-- [ ] Below is a list of penguins, each itself a list. Using a `for` loop (or `sapply`), extract the `species` of every penguin into a character vector, and compute the mean flipper length across all of them.
+- [x] Below is a list of penguins, each itself a list. Using a `for` loop (or `sapply`), extract the `species` of every penguin into a character vector, and compute the mean flipper length across all of them.
 
 ```{r}
 penguins <- list(
@@ -89,11 +89,62 @@ penguins <- list(
 )
 ```
 
-- [ ] The function below is supposed to extract the name of every penguin. Examine its output on the two lists, `penguins` and `penguins2`. Why does it not return the expected values for `penguins2`? Fix the code so it correctly returns penguin names.
+
+Task one
+```{r}
+# task one from part 1b
+summarise_vector <- function(vector){
+  list( mean = mean(vector), minimum = min(vector),maximum = max(vector), n = length(vector))
+}
+example <-summarise_vector(c(210, 217, 230, 205))
+print(example$mean)
+```
+
+Task two
+```{r}
+# Task 2 from part 1b
+
+str(example)
+summarise_vector <- function(vector){
+  list( mean = mean(vector, na.rm = TRUE), minimum = min(vector, na.rm = TRUE),maximum = max(vector, na.rm = TRUE), n = length(na.omit(vector)) )
+}
+modifythis <- summarise_vector(c(223, 245, NA, 123, 543, 773, NA ,851))
+modifythis
+```
+
+Task three
+```{r}
+
+#first half of the task asking for list of species
+species_name <- sapply(penguins, function(f) f$species)
+species_name
+
+#using similar structure as above to calculate mean
+flipper_size <- vapply(penguins, function(f) f$flipper, numeric(1))
+mean(flipper_size)
+
+
+#computing mean with a for loop
+total <- 0
+count <- 0
+
+for (i in penguins) {
+  total <- total + i$flipper
+  count <- count + 1
+}
+
+mean_flipper <- total / count
+mean_flipper
+
+```
+
+- [x] The function below is supposed to extract the name of every penguin. Examine its output on the two lists, `penguins` and `penguins2`. Why does it not return the expected values for `penguins2`? Fix the code so it correctly returns penguin names.
+
+It does not return the expected values for `penguins2` because it performs the function on only the first index of each list `penguin[[1]]`. In `penguins2` this is not always the name. 
 
 ```{r}
 get_penguin_names <- function(penguins) {
-    sapply(penguins, function(penguin) penguin[[1]])
+    sapply(penguins, function(penguin) penguin$name)
 }
 
 penguins2 <- list(
@@ -104,27 +155,6 @@ penguins2 <- list(
 
 get_penguin_names(penguins)
 get_penguin_names(penguins2)
-```
-
-```{r}
-# task one from part 1b
-summarise_vector <- function(vector){
-  list( mean = mean(vector), minimum = min(vector),maximum = max(vector), n = length(vector))
-}
-example <-summarise_vector(c(210, 217, 230, 205))
-print(example$mean)
-```
-```{r}
-# Task 2 from part 1b
-
-str(example)
-summarise_vector <- function(vector){
-  list( mean = mean(vector, na.rm = TRUE), minimum = min(vector, na.rm = TRUE),maximum = max(vector, na.rm = TRUE), n = length(na.omit(vector)) )
-}
-modifythis <- summarise_vector(c(223, 245, NA, 123, 543, 773, NA ,851))
-modifythis
-#modifythis <- summarise_vector(c(223, 245, NA, 123, 543, 773, NA ,851))
-
 ```
 ## Part 2: Advanced Array Indexing
 
@@ -152,12 +182,48 @@ vector <- 1:100
 
 Use elementwise indexing to display all elements in the vector that are:
 
-- [ ] $\leq$ 10
-- [ ] $>$ 90
-- [ ] $\leq 10$ or $> 90$ 
-- [ ] $> 10$ and $\leq 90$
-- [ ] Odd
+- [x] $\leq$ 10
+- [x] $>$ 90
+- [x] $\leq 10$ or $> 90$ 
+- [x] $> 10$ and $\leq 90$
+- [x] Odd
 - [ ] (Advanced): Prime
+
+Task one
+```{r}
+vector[vector <= 10] 
+```
+Task two
+```{r}
+
+vector[vector > 90]
+```
+Task three
+```{r}
+
+vector[ vector <= 10 | vector > 90]
+```
+Task four
+```{r}
+
+vector[ vector > 10 & vector <= 90]
+```
+
+Task five
+```{r}
+
+element <- c()
+for (i in vector){
+  if (i %% 2 == 0) {
+    element[i] <- TRUE
+  } else {
+    element[i] <- FALSE
+  }
+}
+
+vector[element]
+
+```
 
 Hint: You will need to look up how to *combine* logical indexing statements and also some more *advanced* logical indexing statements.
 For the last task look at using `sapply`.
@@ -182,9 +248,24 @@ students <- data.frame(
 )
 ```
 
-- [ ] Using `if_else`, add a new column `result` to `students` that is `"pass"` when the score is at least 40 and `"fail"` otherwise.
-- [ ] Using `case_when`, add a new column `grade` to `students` giving the classification: `"first"` (at least 70), `"2:1"` (at least 60), `"2:2"` (at least 50), `"third"` (at least 40), and `"fail"` otherwise. Remember that conditions are checked in order, so the most specific should come first.
-- [ ] Standard `if`/`else` statements make a single decision about a single value. Using `if`, `else if` and `else`, complete the stub function `is_leap_year` below so that it returns `TRUE` if `year` is a *leap year* and `FALSE` otherwise. The rule is:
+- [x] Using `if_else`, add a new column `result` to `students` that is `"pass"` when the score is at least 40 and `"fail"` otherwise.
+
+```{r}
+result <- c()
+result <- ifelse( students$score >= 40, "pass", "fail")
+students$result <- result
+students
+```
+- [x] Using `case_when`, add a new column `grade` to `students` giving the classification: `"first"` (at least 70), `"2:1"` (at least 60), `"2:2"` (at least 50), `"third"` (at least 40), and `"fail"` otherwise. Remember that conditions are checked in order, so the most specific should come first.
+
+```{r}
+grade <- c()
+grade<- case_when( students$score >= 70 ~ "first", students$score >= 60 ~ "2:1", students$score >= 50 ~"2:2", students$score >= 40 ~"third", TRUE ~ "fail" )
+students$grade <- grade
+students
+```
+
+- [x] Standard `if`/`else` statements make a single decision about a single value. Using `if`, `else if` and `else`, complete the stub function `is_leap_year` below so that it returns `TRUE` if `year` is a *leap year* and `FALSE` otherwise. The rule is:
     - if `year` is divisible by 400, it is a leap year;
     - otherwise, if `year` is divisible by 100, it is *not* a leap year;
     - otherwise, if `year` is divisible by 4, it is a leap year;
@@ -203,7 +284,15 @@ The modulo operator `%%` gives the remainder of a division, so `year %% 400 == 0
 ```{r}
 #| error: TRUE
 is_leap_year <- function(year) {
-    FALSE # Replace with correct code.
+    if (year %%400 == 0){
+      TRUE
+    } else if (year %% 100 ==0){
+      FALSE
+    }else if (year %% 4 == 0 ){
+      TRUE
+    }else{
+      FALSE
+    }
 }
 
 # Self-check: should run without error once is_leap_year is correct
@@ -258,11 +347,16 @@ Your random walk uses randomly generated numbers, so it will produce different o
 
 The *pipe* operator `|>` passes the value on its left into the first argument of the function on its right. Chaining pipes lets a sequence of nested function calls be read left-to-right, in the order they actually happen, rather than inside-out.
 
-- [ ] Rewrite the nested expression below using `|>`, so that it reads as a left-to-right pipeline. Check that your piped version gives the same answer. (Note that the last call takes an extra argument — recall that the piped value fills only the *first* argument of each function.)
+- [x] Rewrite the nested expression below using `|>`, so that it reads as a left-to-right pipeline. Check that your piped version gives the same answer. (Note that the last call takes an extra argument — recall that the piped value fills only the *first* argument of each function.)
 
 ```{r}
 x <- c(4, 9, 16, 25)
 round(mean(sqrt(x)), 1)
+```
+Corrected code
+```{r}
+x <- c(4, 9, 16, 25)
+sqrt(x) |> mean() |> round(1)
 ```
 
 ## Part 5: Debugging
