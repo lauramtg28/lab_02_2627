@@ -316,7 +316,23 @@ vec4 <- "This is not a vector"
 vec5 <- matrix(c(1,2,3,4,NA,6), nrow=2, ncol=3)
 ```
 
-- [ ] In a new chunk, write a function called `make_square` that, given an integer, will print a square of full stops with side length that integer. Here are some examples:
+For loop creation
+```{r}
+nacheck <- function(vec){
+  for (i in vec){
+    ifelse(i == NA, "input vector contains NA", "input vector does not contain NA")
+  }
+}
+
+# check works
+nacheck(vec1)
+nacheck(vec2)
+nacheck(vec3)
+nacheck(vec4)
+nacheck(vec5)
+```
+
+- [x] In a new chunk, write a function called `make_square` that, given an integer, will print a square of full stops with side length that integer. Here are some examples:
 
 ```r
 make_square(3)
@@ -335,6 +351,25 @@ make_square(5)
 .   .
 .....
 ```
+
+Make Square function
+```{r}
+make_square <- function(n, interior = " ", boundary = ".") {
+    if (n < 1 || n != as.integer(n)) { # input validation
+        return("Input must be a positive integer.")
+    }
+    lines <- character(n)
+    for (i in 1:n) {
+        if (i == 1 || i == n) {
+            lines[i] <- paste(rep(boundary, n), collapse = " ")
+        } else {
+            lines[i] <- paste(boundary, paste(rep(interior, n - 2), collapse = " "), boundary)
+        }
+    }
+    paste(lines, collapse = "\n")
+}
+```
+
 
 - [ ] (Advanced): Look up *while loops* in `R`. Write a function that uses a while loop to simulate a particle undergoing a *random walk* in 1D. Starting from 0, in each iteration, the particle either takes a step $x \mapsto x + 1$ or $x \mapsto x - 1$, uniformly at random. Terminate the walk when the particle reaches either -10 or +10, and print where it ended up and how many steps it took.
 - [ ] (Advanced): Run your function from above multiple times. Display how often the particle ended at -10 and how often it ended at +10. Make sure that your results do not change if the worksheet is run multiple times!
