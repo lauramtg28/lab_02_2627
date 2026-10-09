@@ -306,7 +306,7 @@ stopifnot(
 
 ### Part (b): Loops
 
-- [ ] In the next block, write a function that uses a for loop to print a message if an input vector contains NA values. Test it on the five variables supplied below.
+- [x] In the next block, write a function that uses a for loop to print a message if an input vector contains NA values. Test it on the five variables supplied below.
 
 ```{r}
 vec1 <- 1:10
@@ -319,9 +319,17 @@ vec5 <- matrix(c(1,2,3,4,NA,6), nrow=2, ncol=3)
 For loop creation
 ```{r}
 nacheck <- function(vec){
+  count = 0
   for (i in vec){
-    ifelse(i == NA, "input vector contains NA", "input vector does not contain NA")
+    if (is.na(i) == TRUE){
+       count = count +1
+    }
   }
+  if (count> 0){
+       print ("input vector contains NA")
+    }else{
+      print("input vector does not contain NA")
+    }
 }
 
 # check works
